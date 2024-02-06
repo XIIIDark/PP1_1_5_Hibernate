@@ -17,6 +17,11 @@ public class Util {
     private static Connection mySQLConn = null;
     private static SessionFactory sessionFactory = null;
 
+
+//    - с фабрикой все наоборот -
+//    у тебя должна быть только одна фабрика сессий поэтому используй паттерн сиглтон в методе getSessionFactory()
+//    - не надо каждый раз создавать новую фабрику
+
     public static Connection getMySQLConnection() {
         return mySQLConn;
     }
@@ -35,9 +40,11 @@ public class Util {
     }
 
     public static SessionFactory getSessionFactory() {
-        initHibernateConnection();
         return sessionFactory;
     }
 
+    public static void closeSessionFactory() {
+        sessionFactory.close();
+    }
 
 }

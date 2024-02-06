@@ -11,13 +11,17 @@ import java.util.List;
 
 
 public class UserDaoHibernateImpl implements UserDao {
+    // в ресурсах нужно закрывать только сессию - фабрику закрывать не надо
+    private SessionFactory sessionFactory;
 
-
+    public UserDaoHibernateImpl() {
+        Util.initHibernateConnection();
+        this.sessionFactory = Util.getSessionFactory();
+    }
 
     private void executeSQL(String sql) {
         Transaction transaction = null;
-        try (SessionFactory sessionFactory = Util.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.createSQLQuery(sql).executeUpdate();
             transaction.commit();
@@ -50,8 +54,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         Transaction transaction = null;
         User user = new User(name, lastName, age);
-        try (SessionFactory sessionFactory = Util.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.save(user);
             transaction.commit();
@@ -69,8 +72,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
         Transaction transaction = null;
 
-        try (SessionFactory sessionFactory = Util.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
 
             transaction = session.beginTransaction();
             User user = session.get(User.class, id);
@@ -92,8 +94,7 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> users = new ArrayList<>();
         Transaction transaction = null;
 
-        try (SessionFactory sessionFactory = Util.getSessionFactory();
-             Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
 
             transaction = session.beginTransaction();
             String sql = "SELECT * FROM users ;";

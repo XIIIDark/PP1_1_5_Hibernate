@@ -10,6 +10,7 @@ public class Main {
 
         UserServiceImpl userService = new UserServiceImpl();
 
+
         //Создание таблицы User(ов)
         userService.createUsersTable();
 
@@ -28,6 +29,8 @@ public class Main {
 
         //Удаление таблицы
         userService.dropUsersTable();
+
+        Util.closeSessionFactory();
 
 
     }
